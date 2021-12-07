@@ -19,7 +19,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Bit\\Translatable\\": "src/"
+            "Bit\\Translatable\\": "src/",
+            "Bit\\Translatable\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {

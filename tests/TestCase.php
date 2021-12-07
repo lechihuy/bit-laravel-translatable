@@ -1,6 +1,6 @@
 <?php
 
-namespace Bit\Skeleton\Tests;
+namespace Bit\Translatable\Tests;
 
 use Mockery;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
         Mockery::close();
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             TranslatableServiceProvider::class,
@@ -27,6 +27,14 @@ abstract class TestCase extends BaseTestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        //
+        $app['migrator']->path(__DIR__.'/../database/migrations');
+
+        $app['config']->set('database.default', 'testbench');
+
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
     }
 }
