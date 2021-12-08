@@ -2,12 +2,13 @@
 
 namespace Bit\Translatable;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait PerformsRelationships
 {
@@ -104,11 +105,18 @@ trait PerformsRelationships
      */
     public function getTranslatedAttributes(): array
     {
-        return property_exists($this, 'translatedAttributes')
-            ? $this->translatedAttributes
-            : Cache::rememberForever($this->getTranslationTable().'_table_columns', function () {
-                return Schema::getColumnListing($this->getTranslationTable());
-            });
+        if (property_exists($this, 'translatedAttributes'))
+            return $this->translatedAttributes;
+
+        return Cache::rememberForever($this->getTable().'_translated_attributes', function () {
+            $exceptedColumns = [
+                $this->getKeyName(), 
+            ];
+     
+            return collect(Schema::getColumnListing($this->getTranslationTable()))
+                ->diff($exceptedColumns)
+                ->all();
+        });
     }
 
     /**
@@ -143,6 +151,6 @@ trait PerformsRelationships
     {
         return property_exists($this, 'translatedModel')
             ? $this->translatedModel
-            : 'App\\Models\\Translation\\'.class_basename(get_called_class()).'Translation';
+            : 'Bit\\Translatable\\Models\\Translation';
     }
 }

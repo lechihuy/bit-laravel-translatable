@@ -3,8 +3,10 @@
 namespace Bit\Translatable;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 trait Translatable
 {
@@ -20,7 +22,7 @@ trait Translatable
     {
         static::addGlobalScope(new TranslatedScope);
 
-        static::saving(function() {
+        static::saving(function($model) {
             DB::beginTransaction();
         });
 
@@ -38,24 +40,50 @@ trait Translatable
     }
 
     /**
+     * Get the specified translation of the model.
+     * 
+     * @param  Builder  $query
+     * @param  string|null  $locale
+     * @return Builder
+     */
+    public function scopeTranslate($query, $locale = null)
+    {
+        $locale = $locale ?? $this->currentLocale();
+        
+        $query->withoutGlobalScope(TranslatedScope::class)
+            ->join($this->getTranslationTable(), function($join) use ($locale) {
+                $join->on(...$this->getTranslatedColumnConstraint())
+                    ->where($this->getLocaleKey(), $locale);
+            });
+    }
+
+    /**
+     * Get the current locale of the model.
+     * 
+     * @return string
+     */
+    public function currentLocale()
+    {
+        return App::currentLocale();
+    }
+
+    /**
      * Save all translations of the model.
      *
      * @return void
      */
     protected function saveTranslations(): void
     {
-        if (!$this->relationLoaded('translations')) return;
-
         foreach ($this->translations as $translation) {
             if ($translation->isDirty()) {
-                if (! empty($connectionName = $this->getConnectionName())) {
+                if (! empty($connectionName = $this->getConnectionName()))
                     $translation->setConnection($connectionName);
-                }
 
                 $translation->setAttribute($this->getTranslatedForeignKey(), $this->getKey());
                 $translation->save();
             }
         }
+
     }
 
     /**

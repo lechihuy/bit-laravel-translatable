@@ -17,7 +17,14 @@ class Post extends Model
      *
      * @var string
      */
-    public string $translatedModel = PostTranslation::class;
+    public $translatedModel = PostTranslation::class;
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

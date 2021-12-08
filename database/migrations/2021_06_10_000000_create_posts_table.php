@@ -15,12 +15,11 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->softDeletes();
         });
 
         Schema::create('post_translations', function (Blueprint $table) {
-            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->string('locale', 5);
             $table->string('title')->unique();
             $table->string('slug')->unique();

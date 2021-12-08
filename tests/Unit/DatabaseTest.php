@@ -4,6 +4,7 @@ namespace Bit\Translatable\Tests\Unit;
 
 use Bit\Translatable\Tests\Fixtures\Post;
 use Bit\Translatable\Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
 
@@ -29,7 +30,6 @@ class DatabaseTest extends TestCase
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
         $post = Post::factory()->translatedVietnamese()->create();
 
-
         $this->assertDatabaseCount('posts', 1)
             ->assertDatabaseCount('post_translations', 2)
             ->assertDatabaseHas('post_translations', [
@@ -39,6 +39,42 @@ class DatabaseTest extends TestCase
             ->assertDatabaseHas('post_translations', [
                 'post_id' => $post->getKey(),
                 'locale' => 'vi',
+            ]);
+    }
+
+    public function test_expect_database_when_update_the_translation_with_default_locale()
+    {
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+       
+        $post = Post::factory()->translatedVietnamese()->create();
+        $post->title = 'Update';
+        $post->save();
+        $post = $post->translate()->first();
+
+        $this->assertDatabaseCount('posts', 1)
+            ->assertDatabaseCount('post_translations', 2)
+            ->assertDatabaseHas('post_translations', [
+                'post_id' => $post->getKey(),
+                'title' => $post->title,
+                'locale' => App::currentLocale(),
+            ]);
+    }
+
+    public function test_expect_database_when_update_the_translation_with_specified_locale()
+    {
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+        $locale = 'vi';
+        $post = Post::factory()->translatedVietnamese()->create();
+        $post->translation('vi')->fill(['title' => 'Update']);
+        $post->save();
+        $translatedPost = $post->translate($locale)->first();
+
+        $this->assertDatabaseCount('posts', 1)
+            ->assertDatabaseCount('post_translations', 2)
+            ->assertDatabaseHas('post_translations', [
+                'post_id' => $post->getKey(),
+                'title' => $translatedPost->title,
+                'locale' => $locale,
             ]);
     }
 }
