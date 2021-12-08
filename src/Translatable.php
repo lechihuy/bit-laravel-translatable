@@ -83,7 +83,6 @@ trait Translatable
                 $translation->save();
             }
         }
-
     }
 
     /**
@@ -101,9 +100,6 @@ trait Translatable
             $translations->whereIn($this->getLocaleKey(), $locales);
 
         $translations->delete();
-
-        if (!$this->translations->count())
-            $this->delete();
     }
 
     /**
@@ -139,9 +135,14 @@ trait Translatable
      */
     public function translation(string $locale = null): ?Model
     {
-        return $this->translations
+        $translation = $this->translations
             ->where($this->getLocaleKey(), $locale)
             ->first();
+
+        if (!is_null($translation))
+            $translation = $this->resolveTranslationInstance($translation, $locale);
+
+        return $translation;
     }
 
     /**

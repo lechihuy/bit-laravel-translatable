@@ -125,10 +125,23 @@ trait PerformsRelationships
      * @param  string|null  $locale
      * @return Model
      */
-    protected function createNewTranslationInstance(string $locale = null): Model
+    public function createNewTranslationInstance(string $locale = null): Model
     {
         $locale = $locale ?? App::currentLocale();
         $instance = $this->newRelatedInstance($this->getTranslatedModelName());
+
+        return $this->resolveTranslationInstance($instance, $locale);
+    }
+
+    /**
+     * Resolve the translation model's instance.
+     * 
+     * @param  Model  $instance
+     * @param  string|null  $locale
+     * @return Model
+     */
+    public function resolveTranslationInstance(Model $instance, string $locale = null): Model
+    {
         $instance->setTable($this->getTranslationTable());
         $instance->fillable(array_values(array_intersect(
             $this->getFillable(),
@@ -137,10 +150,9 @@ trait PerformsRelationships
 
         if (!is_null($locale))
             $instance->setAttribute($this->getLocaleKey(), $locale);
-
+        
         return $instance;
     }
-
 
     /**
      * Get the translated model name of the model.
