@@ -16,7 +16,7 @@ class TranslatedScope implements Scope
      *
      * @var string[]
      */
-    protected $extensions = ['DeleteTranslations'];
+    protected $extensions = ['DeleteTranslations', 'WhereLocale'];
 
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -27,10 +27,10 @@ class TranslatedScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->join($model->getTranslationTable(), function($join) use ($model) {
-            $join->on(...$model->getTranslatedColumnConstraint())
-                ->where($model->getLocaleKey(), App::currentLocale());
-        });
+        // $builder->join($model->getTranslationTable(), function($join) use ($model) {
+        //     $join->on(...$model->getTranslatedColumnConstraint())
+        //         ->where($model->getLocaleKey(), App::currentLocale());
+        // });
     }
 
     /**
@@ -47,7 +47,7 @@ class TranslatedScope implements Scope
     }
 
     /**
-     * Add the delete translations extension to the builder.
+     * Add the "delete translations" extension to the builder.
      *
      * @param  Builder  $builder
      * @return void
@@ -65,6 +65,21 @@ class TranslatedScope implements Scope
                     $model->getTranslatedForeignKey(), 
                     collect($models)->pluck('id')->all()
                 )->delete();
+        });
+    }
+
+    /**
+     * Add the "where locale" extension to the builder.
+     *
+     * @param  Builder  $builder
+     * @return void
+     */
+    protected function addWhereLocale(Builder $builder)
+    {
+        $builder->macro('whereLocale', function (Builder $builder, $locale) {
+            $model = $builder->getModel();
+
+            $builder->where($model->getLocaleKey(), $locales);
         });
     }
 }
