@@ -46,7 +46,7 @@ trait Translatable
      * @param  string|null  $locale
      * @return Builder
      */
-    public function scopeTranslate($query, $locale = null)
+    public function scopeTranslated($query, $locale = null)
     {
         $locale = $locale ?? $this->currentLocale();
         
@@ -103,6 +103,23 @@ trait Translatable
     }
 
     /**
+     * Restore the translations.
+     *
+     * @param  mixed|null $locales
+     * @return void
+     */
+    public function restoreTranslations(string $locales = null): void
+    {
+        $locales = is_array($locales) ? $locales : func_get_args();
+        $translations = $this->translations()->onlyTrashed();
+
+        if (count($locales))
+            $translations->whereIn($this->getLocaleKey(), $locales);
+
+        $translations->restore();
+    }
+
+    /**
      * Get or create a new translation of the model.
      *
      * @param  string|null  $locale
@@ -135,9 +152,9 @@ trait Translatable
      */
     public function translation(string $locale = null): ?Model
     {
+        $locale = $locale ?: $this->currentLocale();
         $translation = $this->translations
-            ->where($this->getLocaleKey(), $locale)
-            ->first();
+            ->firstWhere($this->getLocaleKey(), $locale);
 
         if (!is_null($translation))
             $translation = $this->resolveTranslationInstance($translation, $locale);
