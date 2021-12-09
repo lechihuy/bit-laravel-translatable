@@ -8,6 +8,8 @@ use Bit\Translatable\Tests\Fixtures\Post;
 
 class PostFactory extends Factory
 {
+    use Translatable;
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -26,20 +28,5 @@ class PostFactory extends Factory
             'title' => $title = $this->faker->sentence(),
             'slug' => Str::slug($title),
         ];
-    }
-
-    /**
-     * Indicate that the user is suspended.
-     *
-     * @return Factory
-     */
-    public function translatedVietnamese(): Factory
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'title:vi' => $title = $this->faker->sentence(),
-                'slug:vi' => Str::slug($title),
-            ];
-        });
     }
 }

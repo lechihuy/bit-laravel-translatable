@@ -28,7 +28,7 @@ class DatabaseTest extends TestCase
     public function test_expect_database_when_make_a_new_translation_with_specified_locale()
     {
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
-        $post = Post::factory()->translatedVietnamese()->create();
+        $post = Post::factory()->translated('vi')->create();
 
         $this->assertDatabaseCount('posts', 1)
             ->assertDatabaseCount('post_translations', 2)
@@ -46,7 +46,7 @@ class DatabaseTest extends TestCase
     {
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
        
-        $post = Post::factory()->translatedVietnamese()->create();
+        $post = Post::factory()->translated('vi')->create();
         $post->title = 'Update';
         $post->save();
         $post = $post->translated()->first();
@@ -64,7 +64,7 @@ class DatabaseTest extends TestCase
     {
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
         $locale = 'vi';
-        $post = Post::factory()->translatedVietnamese()->create();
+        $post = Post::factory()->translated('vi')->create();
         $post->translation('vi')->fill(['title' => 'Update']);
         $post->save();
         $translatedPost = $post->translated($locale)->first();
