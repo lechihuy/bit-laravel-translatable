@@ -49,7 +49,7 @@ class DatabaseTest extends TestCase
         $post = Post::factory()->translatedVietnamese()->create();
         $post->title = 'Update';
         $post->save();
-        $post = $post->translate()->first();
+        $post = $post->translated()->first();
 
         $this->assertDatabaseCount('posts', 1)
             ->assertDatabaseCount('post_translations', 2)
@@ -67,7 +67,7 @@ class DatabaseTest extends TestCase
         $post = Post::factory()->translatedVietnamese()->create();
         $post->translation('vi')->fill(['title' => 'Update']);
         $post->save();
-        $translatedPost = $post->translate($locale)->first();
+        $translatedPost = $post->translated($locale)->first();
 
         $this->assertDatabaseCount('posts', 1)
             ->assertDatabaseCount('post_translations', 2)
