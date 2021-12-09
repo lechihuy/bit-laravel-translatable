@@ -182,4 +182,14 @@ trait Translatable
     {
         return (bool) $this->translations->count();
     }
+
+    /**
+     * Determine if the translation model use soft deletes.
+     * 
+     * @return bool
+     */ 
+    public function translationHasSoftDeletes()
+    {
+        return property_exists($this, 'softDeletesTranslation') ? $this->softDeletesTranslation : false;
+    }
 }

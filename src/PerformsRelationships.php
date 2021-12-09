@@ -163,6 +163,9 @@ trait PerformsRelationships
     {
         return property_exists($this, 'translatedModel')
             ? $this->translatedModel
-            : 'Bit\\Translatable\\Models\\Translation';
+            : ($this->translationHasSoftDeletes() 
+                ? 'Bit\\Translatable\\Models\\SoftDeletesTranslation'
+                : 'Bit\\Translatable\\Models\\Translation'
+            );
     }
 }
