@@ -13,9 +13,23 @@ class TranslatableServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerPublishing();
+
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
         }
+    }
+
+    /**
+     * Register the publishing of the package.
+     *
+     * @return void
+     */
+    protected function registerPublishing(): void
+    {
+        $this->publishes([
+            __DIR__.'/../config/translatable.php' => base_path('config/translatable.php'),
+        ], 'bit-laravel-translatable-config');
     }
 
     /**
