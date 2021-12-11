@@ -67,7 +67,9 @@ trait PerformsRelationships
      */
     public function getLocaleKey(): string
     {
-        return property_exists($this, 'localeKey') ? $this->localeKey : 'locale';
+        return property_exists($this, 'localeKey') 
+            ? $this->localeKey 
+            : config('translatable.locale_key', 'locale');
     }
 
     /**
