@@ -18,7 +18,7 @@ class CreatePostsTable extends Migration
         });
 
         Schema::create('post_translations', function (Blueprint $table) {
-            $table->id();
+            $table->id('translation_id');
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->string('locale', 5);
             $table->string('title')->unique();

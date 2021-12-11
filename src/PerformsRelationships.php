@@ -148,11 +148,24 @@ trait PerformsRelationships
             $this->getFillable(),
             $this->getTranslatedAttributes()
         )));
+        $instance->setKeyName($this->getTranslationKey());
 
         if (!is_null($locale))
             $instance->setAttribute($this->getLocaleKey(), $locale);
         
         return $instance;
+    }
+
+    /**
+     * Get the translation key of the model.
+     * 
+     * @return string
+     */
+    public function getTranslationKey()
+    {
+        return property_exists($this, 'translationKey') 
+            ? $this->translationKey
+            : config('translatable.translation_key', 'translation_id'); 
     }
 
     /**

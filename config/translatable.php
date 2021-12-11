@@ -35,4 +35,15 @@ return [
     |
     */
     'locale_key' => 'locale',
+
+    /*
+    |--------------------------------------------------------------------------
+    | The name of primary key column's traslation tables
+    |--------------------------------------------------------------------------
+    |
+    | It must be matched with the name of primary key column's translation tables in your application.
+    | You can also configure it on each translation model.
+    |
+    */
+    'translation_key' => 'translation_id',
 ];
