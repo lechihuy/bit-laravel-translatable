@@ -64,7 +64,7 @@ trait Translatable
      */
     public function currentLocale()
     {
-        return App::currentLocale();
+        return config('translatable.default') ?? App::currentLocale();
     }
 
     /**
@@ -138,6 +138,9 @@ trait Translatable
      */
     protected function createNewTranslation(string $locale = null): Model
     {
+        $locale = $locale ?: $this->currentLocale();
+        $this->checkLocaleIsAllowed($locale);
+
         $translation = $this->createNewTranslationInstance($locale);
         $this->translations->add($translation);
 
@@ -153,6 +156,8 @@ trait Translatable
     public function translation(string $locale = null): ?Model
     {
         $locale = $locale ?: $this->currentLocale();
+        $this->checkLocaleIsAllowed($locale);
+
         $translation = $this->translations
             ->firstWhere($this->getLocaleKey(), $locale);
 
@@ -191,5 +196,20 @@ trait Translatable
     public function translationHasSoftDeletes()
     {
         return property_exists($this, 'softDeletesTranslation') ? $this->softDeletesTranslation : false;
+    }
+
+    /**
+     * Determine if the given locale isn't allowed for the translation.
+     * 
+     * @param  string  $locale
+     * @return bool
+     * @throws Exception
+     */
+    protected function checkLocaleIsAllowed($locale) 
+    {
+        if (in_array($locale, config('translatable.locales', [])))
+            return true;
+
+        throw new Exception("Locale [$locale] does not allowed.");
     }
 }

@@ -7,6 +7,18 @@ use Illuminate\Support\ServiceProvider;
 class TranslatableServiceProvider extends ServiceProvider
 {
     /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/translatable.php', 'translatable'
+        );
+    }
+
+    /**
      * Bootstrap any application services.
      *
      * @return void

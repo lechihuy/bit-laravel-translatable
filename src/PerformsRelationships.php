@@ -4,7 +4,6 @@ namespace Bit\Translatable;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
@@ -127,7 +126,7 @@ trait PerformsRelationships
      */
     public function createNewTranslationInstance(string $locale = null): Model
     {
-        $locale = $locale ?? App::currentLocale();
+        $locale = $locale ?? $this->currentLocale();
         $instance = $this->newRelatedInstance($this->getTranslatedModelName());
 
         return $this->resolveTranslationInstance($instance, $locale);

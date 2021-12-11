@@ -10,7 +10,7 @@ return [
     | It's different from the "app.locale" configuration.
     |
     */
-    'default' => 'vi',
+    'default' => null,
 
     /*
     |--------------------------------------------------------------------------

@@ -3,7 +3,6 @@
 namespace Bit\Translatable;
 
 use Illuminate\Database\Eloquent\MassAssignmentException;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 trait PerformsAttributes
@@ -68,6 +67,6 @@ trait PerformsAttributes
         if (Str::contains($key, ':'))
             return explode(':', $key);
 
-        return [$key, App::currentLocale()];
+        return [$key, $this->currentLocale()];
     }
 }

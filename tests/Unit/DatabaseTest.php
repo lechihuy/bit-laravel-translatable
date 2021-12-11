@@ -21,7 +21,7 @@ class DatabaseTest extends TestCase
             ->assertDatabaseCount('post_translations', 1)
             ->assertDatabaseHas('post_translations', [
                 'post_id' => $post->getKey(),
-                'locale' => App::currentLocale(),
+                'locale' => $post->currentLocale(),
             ]);
     }
 
@@ -34,7 +34,7 @@ class DatabaseTest extends TestCase
             ->assertDatabaseCount('post_translations', 2)
             ->assertDatabaseHas('post_translations', [
                 'post_id' => $post->getKey(),
-                'locale' => App::currentLocale(),
+                'locale' => $post->currentLocale(),
             ])
             ->assertDatabaseHas('post_translations', [
                 'post_id' => $post->getKey(),
@@ -56,7 +56,7 @@ class DatabaseTest extends TestCase
             ->assertDatabaseHas('post_translations', [
                 'post_id' => $post->getKey(),
                 'title' => $post->title,
-                'locale' => App::currentLocale(),
+                'locale' => $post->currentLocale(),
             ]);
     }
 
