@@ -28,6 +28,40 @@ trait PerformsAttributes
     }
 
     /**
+     * Get a given attribute on the model.
+     *
+     * @param  string  $key
+     * @return $this
+     */
+    public function getAttribute($key)
+    {
+        [$attribute, $locale] = $this->resolveTranslatedAttribute($key);
+
+        if ($this->isTranslatedAttribute($attribute)) {
+            if ($this->translation($locale) === null)
+                return $this->getAttributeValue($attribute);
+
+            if ($this->hasGetMutator($attribute)) 
+                $this->attributes[$attribute] = $this->getTranslatedAttribute($attribute);
+
+            return $this->getTranslatedAttribute($attribute);
+        }
+
+        return parent::getAttribute($key);
+    }
+
+    /**
+     * Get a given translated attribute on the model.
+     *
+     * @param  string  $attribute
+     * @return mixed
+     */
+    public function getTranslatedAttribute(string $attribute): mixed
+    {
+        return optional($this->translation())->getAttribute($attribute);
+    }
+
+    /**
      * Fill the model with an array of attributes.
      *
      * @param array $attributes
@@ -68,5 +102,16 @@ trait PerformsAttributes
             return explode(':', $key);
 
         return [$key, $this->currentLocale()];
+    }
+
+    /**
+     * Determine if the given attribute is a translated attribute.
+     *
+     * @param  string  $attribute
+     * @return bool
+     */
+    public function isTranslatedAttribute(string $attribute): bool
+    {
+        return in_array($attribute, $this->getTranslatedAttributes());
     }
 }

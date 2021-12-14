@@ -73,7 +73,7 @@ class DatabaseTest extends TestCase
             ->assertDatabaseCount('post_translations', 2)
             ->assertDatabaseHas('post_translations', [
                 'post_id' => $post->getKey(),
-                'title' => $translatedPost->title,
+                'title' => $translatedPost->translation($locale)->title,
                 'locale' => $locale,
             ]);
     }

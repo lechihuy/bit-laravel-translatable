@@ -89,17 +89,6 @@ trait PerformsRelationships
     }
 
     /**
-     * Determine if the given attribute is a translated attribute.
-     *
-     * @param  string  $attribute
-     * @return bool
-     */
-    public function isTranslatedAttribute(string $attribute): bool
-    {
-        return in_array($attribute, $this->getTranslatedAttributes());
-    }
-
-    /**
      * Get all translated attributes of the model.
      *
      * @return array
