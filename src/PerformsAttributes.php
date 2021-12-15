@@ -23,6 +23,7 @@ trait PerformsAttributes
         }
 
         $this->translationOrNew($locale)->setAttribute($attribute, $value);
+        $this->attributes[$attribute] = $value;
 
         return $this;
     }
