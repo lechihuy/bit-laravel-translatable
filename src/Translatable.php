@@ -25,11 +25,11 @@ trait Translatable
         static::saving(function($model) {
             DB::beginTransaction();
 
-            foreach ($model->getDirty() as $attribute => $value) {
-                if (in_array($attribute, $model->getTranslatedAttributes())) {
-                    unset($model->attributes[$attribute]);
-                }
-            }
+            // foreach ($model->getDirty() as $attribute => $value) {
+            //     if (in_array($attribute, $model->getTranslatedAttributes())) {
+            //         unset($model->{$attribute});
+            //     }
+            // }
         });
 
         static::saved(function($model) {

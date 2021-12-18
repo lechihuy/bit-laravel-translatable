@@ -23,7 +23,7 @@ trait PerformsAttributes
         }
 
         $this->translationOrNew($locale)->setAttribute($attribute, $value);
-        $this->attributes[$attribute] = $value;
+        $this->{$attribute} = $value;
 
         return $this;
     }
@@ -43,7 +43,7 @@ trait PerformsAttributes
                 return $this->getAttributeValue($attribute);
 
             if ($this->hasGetMutator($attribute)) 
-                $this->attributes[$attribute] = $this->getTranslatedAttribute($attribute);
+                $this->{$attribute} = $this->getTranslatedAttribute($attribute);
 
             return $this->getTranslatedAttribute($attribute);
         }
@@ -114,5 +114,21 @@ trait PerformsAttributes
     public function isTranslatedAttribute(string $attribute): bool
     {
         return in_array($attribute, $this->getTranslatedAttributes());
+    }
+
+    /**
+     * Convert the model's attributes to an array.
+     * 
+     * @return array
+     */
+    public function attributesToArray()
+    {
+        $attributes = parent::attributesToArray();
+
+        foreach ($this->getTranslatedAttributes() as $attribute) {
+            $attributes[$attribute] = $this->getAttribute($attribute);
+        }
+
+        return $attributes;
     }
 }
