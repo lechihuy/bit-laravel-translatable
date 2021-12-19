@@ -124,7 +124,7 @@ trait PerformsAttributes
         $attributes = parent::attributesToArray();
 
         foreach ($this->getTranslatedAttributes() as $attribute) {
-            $attributes[$attribute] = $this->getAttribute($attribute);
+            $attributes[$attribute] = $this->getTranslatedAttribute($attribute);
         }
 
         return $attributes;
