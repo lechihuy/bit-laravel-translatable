@@ -17,13 +17,11 @@ trait PerformsAttributes
     public function setAttribute($key, $value)
     {
         [$attribute, $locale] = $this->resolveTranslatedAttribute($key);
-
         if (! $this->isTranslatedAttribute($attribute)) {
             return parent::setAttribute($attribute, $value);
         }
 
         $this->translationOrNew($locale)->setAttribute($attribute, $value);
-        $this->{$attribute} = $value;
 
         return $this;
     }
@@ -121,14 +119,14 @@ trait PerformsAttributes
      * 
      * @return array
      */
-    public function attributesToArray()
-    {
-        $attributes = parent::attributesToArray();
+    // public function attributesToArray()
+    // {
+    //     $attributes = parent::attributesToArray();
 
-        foreach ($this->getTranslatedAttributes() as $attribute) {
-            $attributes[$attribute] = $this->getAttribute($attribute);
-        }
+    //     foreach ($this->getTranslatedAttributes() as $attribute) {
+    //         $attributes[$attribute] = $this->getAttribute($attribute);
+    //     }
 
-        return $attributes;
-    }
+    //     return $attributes;
+    // }
 }
