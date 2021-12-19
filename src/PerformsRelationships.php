@@ -98,15 +98,18 @@ trait PerformsRelationships
         if (property_exists($this, 'translatedAttributes'))
             return $this->translatedAttributes;
 
-        return Cache::rememberForever($this->getTable().'_translated_attributes', function () {
-            $exceptedColumns = [
-                $this->getKeyName(), 
-            ];
-     
-            return collect(Schema::getColumnListing($this->getTranslationTable()))
-                ->diff($exceptedColumns)
-                ->all();
-        });
+        $cacheKey = $this->getTable().'_translated_attributes';
+
+        return Cache::get($cacheKey) 
+            ?? Cache::rememberForever($cacheKey, function () {
+                $exceptedColumns = [
+                    $this->getKeyName(), 
+                ];
+        
+                return collect(Schema::getColumnListing($this->getTranslationTable()))
+                    ->diff($exceptedColumns)
+                    ->all();
+            });
     }
 
     /**
