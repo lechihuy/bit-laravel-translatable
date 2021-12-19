@@ -119,14 +119,14 @@ trait PerformsAttributes
      * 
      * @return array
      */
-    // public function attributesToArray()
-    // {
-    //     $attributes = parent::attributesToArray();
+    public function attributesToArray()
+    {
+        $attributes = parent::attributesToArray();
 
-    //     foreach ($this->getTranslatedAttributes() as $attribute) {
-    //         $attributes[$attribute] = $this->getAttribute($attribute);
-    //     }
+        foreach ($this->getTranslatedAttributes() as $attribute) {
+            $attributes[$attribute] = $this->getAttribute($attribute);
+        }
 
-    //     return $attributes;
-    // }
+        return $attributes;
+    }
 }
