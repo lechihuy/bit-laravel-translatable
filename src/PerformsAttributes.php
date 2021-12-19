@@ -124,7 +124,9 @@ trait PerformsAttributes
         $attributes = parent::attributesToArray();
 
         foreach ($attributes as $attribute => $value) {
-            if ($this->isTranslatedAttribute($attribute) && $this->relationLoaded('translations'))
+            if ($this->isTranslatedAttribute($attribute) 
+            && $this->relationLoaded('translations') 
+            && $this->translation()->isDirty($attribute))
                 $attributes[$attribute] = $this->getTranslatedAttribute($attribute);
         }
 
